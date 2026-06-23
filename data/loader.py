@@ -1,6 +1,13 @@
+import sys
+import os
 import pandas as pd
 from sqlalchemy import create_engine, text
+
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config.settings import DB_URI
+from config.model_config import ModelConfig
 
 engine = create_engine(DB_URI)
 

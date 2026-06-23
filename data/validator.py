@@ -1,6 +1,13 @@
+import sys
+import os
 import pandas as pd
 import numpy as np
+
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from utils.logger import logger
+
 
 class DataValidator:
     """
