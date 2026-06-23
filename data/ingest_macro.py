@@ -92,8 +92,8 @@ def ingest_macro_data(start_date: str, end_date: str, force: bool = False):
 
         for s_dt, e_dt, gap_type in fetch_ranges:
             s_str, e_str = s_dt.strftime('%Y-%m-%d'), e_dt.strftime('%Y-%m-%d')
-            two_years_ago = (MarketClock.now() - timedelta(days=720)).replace(tzinfo=None)
-            use_yfinance = (s_dt < two_years_ago) or ticker.startswith('^')
+            polygon_boundary = (MarketClock.now() - timedelta(days=ModelConfig.POLYGON_MAX_HISTORY_DAYS)).replace(tzinfo=None)
+            use_yfinance = (s_dt < polygon_boundary) or ticker.startswith('^')
             
             try:
                 bars = fetch_macro_with_retry(ticker, s_str, e_str, use_yfinance=use_yfinance)

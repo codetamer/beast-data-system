@@ -134,14 +134,14 @@ def ingest_market_data(tickers: list[str], start_date: str, end_date: str, force
 
         for s_dt, e_dt, gap_type in fetch_ranges:
             s_str, e_str = s_dt.strftime('%Y-%m-%d'), e_dt.strftime('%Y-%m-%d')
-            two_years_ago = (MarketClock.now() - timedelta(days=720)).replace(tzinfo=None)
-            use_yfinance = s_dt < two_years_ago
+            polygon_boundary = (MarketClock.now() - timedelta(days=ModelConfig.POLYGON_MAX_HISTORY_DAYS)).replace(tzinfo=None)
+            use_yfinance = s_dt < polygon_boundary
             
             # [IRONCLAD FIX] Adjustment Bridge: Validate cross-source consistency
-            if use_yfinance and (MarketClock.now().replace(tzinfo=None) - s_dt).days < 800:
-                # We are near the 2-year boundary, let's check a bridge window
-                bridge_start = (two_years_ago - timedelta(days=5)).strftime('%Y-%m-%d')
-                bridge_end = two_years_ago.strftime('%Y-%m-%d')
+            if use_yfinance and (MarketClock.now().replace(tzinfo=None) - s_dt).days < (ModelConfig.POLYGON_MAX_HISTORY_DAYS + 80):
+                # We are near the sourcing boundary, let's check a bridge window
+                bridge_start = (polygon_boundary - timedelta(days=5)).strftime('%Y-%m-%d')
+                bridge_end = polygon_boundary.strftime('%Y-%m-%d')
                 try:
                     p_bridge = fetch_bars_with_retry(ticker, bridge_start, bridge_end, use_yfinance=False)
                     y_bridge = fetch_bars_with_retry(ticker, bridge_start, bridge_end, use_yfinance=True)

@@ -11,6 +11,11 @@ class ModelConfig:
     TIMEZONE = 'US/Eastern'        # Market timezone for alignment.
     START_DATE = '2020-01-01'      # History anchor for start.
     END_DATE = '2025-12-31'        # Termination point for data fetch.
+    
+    # --- API Sourcing & Tier Config ---
+    # Default to 730 days (2 years) for free/basic tiers. Increase for paid plans (e.g., 3650 for 10 years).
+    POLYGON_MAX_HISTORY_DAYS = 730
+
 
     
     DAILY_ML_TRAINING_WINDOW = 756  # Days of training lookback buffer.
