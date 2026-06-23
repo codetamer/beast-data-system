@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Environment / Secrets
+.env
+
+# Local database and data artifacts
+data/*.db
+data/*.log
+data/*_report.txt
+data/quant.db
+data/beast_ingestion.log
+data/audit_report.txt
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# IDE files
+.idea/
+.vscode/
+.DS_Store
