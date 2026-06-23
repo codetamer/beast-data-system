@@ -128,23 +128,18 @@ def main():
     # Initialize Universal Ingestion Logger
     logger.setup_ingestion_logging()
     
-    # Auto-initialize database tables and indexes if database file is missing/cleared
+    # Auto-initialize database tables and indexes if database is missing/uninitialized
     from config.settings import DB_URI
     from sqlalchemy import create_engine, text
     
     db_exists = False
-    if DB_URI.startswith("sqlite:///"):
-        db_path = DB_URI.replace("sqlite:///", "").replace("sqlite://", "")
-        if db_path and db_path != ":memory:":
-            db_exists = os.path.exists(db_path)
-    else:
-        try:
-            engine = create_engine(DB_URI)
-            with engine.connect() as conn:
-                conn.execute(text("SELECT 1 FROM market_data_daily LIMIT 1"))
-            db_exists = True
-        except Exception:
-            db_exists = False
+    try:
+        engine = create_engine(DB_URI)
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1 FROM market_data_daily LIMIT 1"))
+        db_exists = True
+    except Exception:
+        db_exists = False
             
     if not db_exists:
         logger.info("Database not present or uninitialized. Running schema creator...", tag="INGEST")

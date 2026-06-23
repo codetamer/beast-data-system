@@ -27,19 +27,6 @@ def ingest_yfinance_fundamentals(tickers: list[str], start_date=None, end_date=N
     stats = {"success": 0, "failed": 0, "rows": 0}
     
     logger.info(f"--- Starting yfinance Ingestion for {len(tickers)} symbols ---", tag="YFINANCE")
-    
-    # --- Initialize Sync Metadata table ---
-    with engine.connect() as conn:
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS sync_metadata (
-                symbol TEXT, 
-                component TEXT, 
-                last_synced TIMESTAMP, 
-                PRIMARY KEY (symbol, component)
-            )
-        """))
-        conn.commit()
-
     @retry_with_backoff(tag="YFINANCE")
     def fetch_yt_data(ticker):
         yt = yf.Ticker(ticker)

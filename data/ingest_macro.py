@@ -31,19 +31,6 @@ def ingest_macro_data(start_date: str, end_date: str, force: bool = False):
     # ... (Create table code omitted, assumes existing) ...
     # Wait, I should not omit the table creation if I am replacing the function def. 
     # But I am replacing lines 24-77.
-    
-    # --- Initialize Sync Metadata table ---
-    with engine.connect() as conn:
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS sync_metadata (
-                symbol TEXT, 
-                component TEXT, 
-                last_synced TIMESTAMP, 
-                PRIMARY KEY (symbol, component)
-            )
-        """))
-        conn.commit()
-
     stats = {"success": 0, "failed": 0, "rows": 0}
     target_start = pd.to_datetime(start_date).replace(tzinfo=None)
     target_end = pd.to_datetime(end_date).replace(tzinfo=None)

@@ -44,19 +44,6 @@ def ingest_market_data(tickers: list[str], start_date: str, end_date: str, force
     Fetch OHLCV data with Range Guard, Sync Sentinel, and Silent Discovery.
     """
     import time
-    
-    # --- Initialize Sync Metadata table ---
-    with engine.connect() as conn:
-        conn.execute(text("""
-            CREATE TABLE IF NOT EXISTS sync_metadata (
-                symbol TEXT, 
-                component TEXT, 
-                last_synced TIMESTAMP, 
-                PRIMARY KEY (symbol, component)
-            )
-        """))
-        conn.commit()
-
     stats = {"success": 0, "failed": 0, "rows": 0}
     target_start = pd.to_datetime(start_date).replace(tzinfo=None)
     target_end = pd.to_datetime(end_date).replace(tzinfo=None)

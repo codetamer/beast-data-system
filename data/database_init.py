@@ -84,12 +84,24 @@ def setup_database():
             except Exception: 
                 conn.rollback()
             conn.commit()
-        
 
+        # 5. Sync Metadata
+        print("Verifying sync_metadata...")
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS sync_metadata (
+                symbol TEXT NOT NULL, 
+                component TEXT NOT NULL, 
+                last_synced TIMESTAMP, 
+                PRIMARY KEY (symbol, component)
+            );
+        """))
+        conn.commit()
         
-        # 7. Optimization (Indexes)
+        # 6. Optimization (Indexes)
         print("Verifying Performance Indexes...")
         conn.execute(text("CREATE INDEX IF NOT EXISTS idx_daily_sym_time ON market_data_daily (symbol, time DESC);"))
+        conn.execute(text("CREATE INDEX IF NOT EXISTS idx_fund_pub_sym ON fundamentals (pub_date, symbol);"))
+        conn.execute(text("CREATE INDEX IF NOT EXISTS idx_fund_sym_metric ON fundamentals (symbol, metric);"))
         
         conn.commit()
         print("--- Database Initialization Complete ---\n")
