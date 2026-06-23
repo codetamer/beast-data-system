@@ -48,6 +48,8 @@ def load_fundamentals(start_date: str, end_date: str, symbols: list = None) -> p
         query += f" AND symbol IN ({symbols_str})"
         
     df = pd.read_sql(text(query), engine, params=params)
+    if df.empty:
+        return pd.DataFrame()
     df['pub_date'] = pd.to_datetime(df['pub_date']).dt.tz_localize(None).dt.normalize()
     return df
 
