@@ -1,8 +1,14 @@
+import sys
+import os
 import logging
 import time
 from typing import List, Dict, Any, Optional
 from polygon import RESTClient
 from requests.exceptions import HTTPError
+
+# Add project root to path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config.settings import POLYGON_API_KEY
 
 logging.basicConfig(level=logging.INFO)
